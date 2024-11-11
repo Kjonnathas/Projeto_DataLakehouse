@@ -126,7 +126,7 @@ O ojetivo deste projeto é colocar em prática os conhecimentos adquiridos no cu
 
 ![Tela da Amazon S3](images/Bucket_s3_arquivo_carregado.png)
 
-5. Processamente e Análise no Dremio
+5. Processamento e Análise no Dremio
 
 <br>
 
@@ -171,3 +171,109 @@ O ojetivo deste projeto é colocar em prática os conhecimentos adquiridos no cu
 4. Apesar do produto Côte de Blaye ter sido o produto com maior valor vendido, o produto mais vendido foi o Camembert Pierrot com 1.577 unidades vendidas, porém com somente 4% do valor total vendido entre todos os produtos. Para efeitos de comparação, o produto Côte de Blaye tem 11% do total vendido.
 
 # 6. Instalação e Configuração
+
+- Pré-requisitos:
+
+  1. Instalar o Docker Desktop;
+
+     Link para download: https://www.docker.com/
+
+  2. Instalar o PgAdmin (Client do PostgreSQL);
+
+     Link para download:
+
+  3. Instalar o Airbyte;
+
+     Link para download: https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart
+
+  4. Instalar o Git;
+
+     Link para download:
+
+  5. Criar uma conta na AWS;
+
+     Link do site:
+
+  6. Criar uma conta no Dremio;
+
+     Link do site:
+
+<br>
+
+- Passo a passo:
+
+1. Após ter instalado os softwares informados e criado as contas, o primeiro passo é criar os contêineres no Docker. Abra o seu prompt de comando ou o terminal do Git e digite:
+
+```
+
+docker run --name <conteiner_name> -p 5432:5432 -e POSTGRES_DB=<db_name> -e POSTGRES_USER=<username> -e POSTGRES_PASSWORD=<password> -d postgres
+```
+
+1.1 Após rodar este comando, o Docker criará o volume, a imagem e o contêiner do PostgreSQL.
+
+1.2 Em seguida, abra o PgAdmin (se não instalou ainda, precisará instalar agora). Após abrir o PgAdmin, siga as seguintes etapas:
+
+<br>
+
+![Criando o Servidor no PostgreSQL](images/Postgres_criar_servidor.png)
+
+<br>
+
+![Criando o Servidor no PostgreSQL](images/Postgres_criar_servidor_2.png)
+
+<br>
+
+![Criando o Servidor no PostgreSQL](images/Postgres_criar_servidor_3.png)
+
+<br>
+
+![Criando o Servidor no PostgreSQL](images/Postgres_criar_servidor_4.png)
+
+1.3 Após criar o schema, clique com o botão direito sobre o objeto
+tables e selecione query tool. Em seguida irá abrir uma tela para criar códigos em SQL. Vá até a pasta src/scripts e copie o código em SQL e cole no query tool e depois aperte F5 ou clique no botão de executar disponível para que seja feita a criação das tabelas no seu schema;
+
+1.4 Com as tabelas criadas, podemos prosseguir com a criação do contêiner do Airbyte. É preciso fazer o download do arquivo disponível no site do Airbyte através do link disponibilizado. Feito o download, o arquivo será baixado zipado. Faça a descompactação do arquivo. Basta clicar com o botão direito e extrair tudo. Após isso, será necessário criar uma variável de ambiente para o que o sistema operacional entenda o comando do airbyte. Entre na pasta do airbyte e copie o caminho. Em seguida, vá até as variáveis de ambiente, clique no Path, editar e novo. Cole o caminho e depois clique em ok para salvar. Agora o sistema operacinal já deve reconhecer os comandos que vamos precisar digitar:
+
+```
+abctl version
+```
+
+Obs: Se o comando acima não funcionar significa que algo de errado ao salvar a variável de ambiente ocorreu. Revise essa etapa! Se o prompt devolver a versão é porque funcionou normalmente e o sistema já identifica o comando.
+
+1.5 Com o Docker Desktop aberto, digite o comando abaixo no seu prompt de comando:
+
+```
+abctl local install
+```
+
+Essa etapa costuma demorar pela primeira vez, então tenha paciência! É importante verificar na documentação a exigência mínima de hardware, pois o Airbyte é pesado e consome bastante memória. Se seu computador não for muito bom, é provável que vá ter problemas com travamento.
+
+1.6 Se tudo der certo e a instalação concluir com sucesso, digite o comando:
+
+```
+abctl local credentials
+```
+
+O comando acima lhe dará um ID e uma senha, que serão necessários para logar no Airbyte via navegador. Teste a sua conexão indo até o navegador e acesse "localhost:8000", digite as credenciais e resolvido.
+
+1.7 Depois que estiver funcionando, vamos precisar colocar o contêiner do Airbyte e do PostgreSQL na mesma rede para que eles possam se comunicar. Caso contrário, ao tentar realizar a conexão da fonte de dados no Airbyte resultará em erro. Sendo assim, vá ao prompt de comando e digite:
+
+```
+docker network inspect bridge
+```
+
+Este comando apresentará uma estrutura json e na chave Containers tanto o PostgreSQL quanto o Airbyte precisam aparecer. Acredito que por padrão o PostgreSQL já vai para a rede Bridge, mas no caso do Airbyte não. Mas para evitar problemas você pode incluir o parâmetro "--network bridge" ao criar o contêiner do PostgreSQL. Caso já tenha criado, basta excluir o contêiner no Docker Desktop e criar novamente com a inclusão deste parâmetro. Em seguida, vamos incluir o contêiner do Airbyte na rede Bridge. Para isso, digite o seguinte comando:
+
+```
+docker network disconnect <rede_atual> <container_name>
+```
+
+Obs: Para saber em que rede o contêiner do Airbyte está digite: docker inspect -f '{{.NetworkSettings.Networks}}' container_name. Sabendo o nome da rede substitua no código fornecido acima. Em seguida, continue com o comando:
+
+```
+docker network connect bridge <container_name>
+```
+
+O código acima irá incluir o contêiner do Airbyte na rede Bridge e com isso os dois contêineres estarão se comunicando.
+
+1.8 Agora é a parte de configurar o source, o destination e a connection no Airbyte. Visualizando as imagens disponibilizadas acima é possível fazer as configurações da source sem grandes problemas. Não seguirei com o destination pois a Amazon faz cobrança e não quero que algo acabe não saindo como o esperado e gere custos não planejados. Isso quer dizer que, vou ficar devendo a parte da Amazon e do Dremio. Porém, há vários tutoriais e vídeos gartuitos sobre o assunto. Caso queira muito seguir, procure por esse material e siga em frente!
