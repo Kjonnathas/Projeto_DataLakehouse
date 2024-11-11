@@ -276,4 +276,10 @@ docker network connect bridge <container_name>
 
 O código acima irá incluir o contêiner do Airbyte na rede Bridge e com isso os dois contêineres estarão se comunicando.
 
-1.8 Agora é a parte de configurar o source, o destination e a connection no Airbyte. Visualizando as imagens disponibilizadas acima é possível fazer as configurações da source sem grandes problemas. Não seguirei com o destination pois a Amazon faz cobrança e não quero que algo acabe não saindo como o esperado e gere custos não planejados. Isso quer dizer que, vou ficar devendo a parte da Amazon e do Dremio. Porém, há vários tutoriais e vídeos gartuitos sobre o assunto. Caso queira muito seguir, procure por esse material e siga em frente!
+1.8 Agora é a parte de configurar o source, o destination e a connection no Airbyte. Visualizando as imagens disponibilizadas acima é possível fazer as configurações da source sem grandes problemas. Não seguirei com o destination pois a Amazon faz cobrança e não quero que algo acabe não saindo como o esperado e gere custos não planejados. Isso quer dizer que, vou ficar devendo a parte da Amazon e do Dremio. Porém, há vários tutoriais e vídeos gratuitos sobre o assunto. Caso queira muito seguir, procure por esse material e siga em frente!
+
+<br>
+
+## Licença
+
+Este projeto está licenciado sob os termos da licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
