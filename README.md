@@ -180,7 +180,7 @@ O ojetivo deste projeto é colocar em prática os conhecimentos adquiridos no cu
 
   2. Instalar o PgAdmin (Client do PostgreSQL);
 
-     Link para download:
+     Link para download: https://www.pgadmin.org/download/
 
   3. Instalar o Airbyte;
 
@@ -188,15 +188,15 @@ O ojetivo deste projeto é colocar em prática os conhecimentos adquiridos no cu
 
   4. Instalar o Git;
 
-     Link para download:
+     Link para download: https://git-scm.com/downloads
 
   5. Criar uma conta na AWS;
 
-     Link do site:
+     Link do site: https://aws.amazon.com/pt/console/
 
   6. Criar uma conta no Dremio;
 
-     Link do site:
+     Link do site: https://www.dremio.com/get-started/
 
 <br>
 
